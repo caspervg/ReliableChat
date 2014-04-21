@@ -47,6 +47,8 @@ public class MessageHandler {
 
             clientConnection = ReliableChatServer.getActiveConnections().get(sendFrom);
             clientConnection.sendMessage(new CallMessage(CallType.MESSAGE_SENT));
+            clientConnection = ReliableChatServer.getActiveConnections().get(sendFrom);
+            clientConnection.sendMessage(msg);
         } else {
             clientConnection = ReliableChatServer.getActiveConnections().get(sendFrom);
             clientConnection.sendMessage(new CallMessage(CallType.RECIPIENT_NOT_EXIST));

@@ -23,38 +23,48 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package connection.handler;
+package net.caspervg.reliablechat.client.handler;
 
+import javafx.scene.control.TextArea;
+import net.caspervg.reliablechat.client.ReliableChatCompanion;
 import net.caspervg.reliablechat.protocol.CallMessage;
 import net.caspervg.reliablechat.protocol.ChatMessage;
 import net.caspervg.reliablechat.protocol.InfoMessage;
 
 import java.util.List;
-import java.util.Set;
 
 public class MessageHandler {
 
+    private static ReliableChatCompanion companion = null;
+
+    public static void setCompanion(ReliableChatCompanion companion) {
+        MessageHandler.companion = companion;
+    }
+
     public static void handleChat(ChatMessage msg) {
-        // TODO: Actually use a GUI instead of the command line!
-        System.out.println(msg.getFrom() + ": " + msg.getMessage());
+        // TODO: Use some MVC instead of this crappy system
+        TextArea chatArea = companion.chatArea;
+        String currentText = chatArea.getText();
+        chatArea.setText(currentText.concat("\n" + msg.getFrom() + ": " + msg.getMessage()));
     }
 
     public static void handleCall(CallMessage msg) {
-        // TODO: Actually use a GUI instead of the command line!
+        // TODO: Actually use a GUI instead of the command line
         System.err.println("CALL " + msg.getCallType().getCode() + ": " + msg.getCallType().getMessage());
     }
 
     public static void handleInfo(InfoMessage msg) {
-        // TODO: Actually use a GUI instead of the command line!
+        // TODO: Use some MVC instead of this crappy system
         System.err.println("INFO " + msg.getCallType().getCode() + ": " + msg.getCallType().getMessage());
 
         switch (msg.getCallType()) {
             case USER_LOGGED_IN:
             case USER_LOGGED_OUT:
-                System.err.println("Remaining users:");
+                String friendList = "";
                 for (String s: (List<String>) msg.getPayload()) {
-                    System.err.println(s);
+                    friendList += "\n" + s;
                 }
+                companion.friendArea.setText(friendList);
                 break;
             default:
                 // Do nothing

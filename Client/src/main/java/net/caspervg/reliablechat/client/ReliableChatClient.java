@@ -1,4 +1,4 @@
-/*
+package net.caspervg.reliablechat.client;/*
  * Copyright (c) 2014 Casper Van Gheluwe
  *
  *  Permission is hereby granted, free of charge, to any person
@@ -23,22 +23,38 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package log;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class ReliableLogger {
+import java.util.Properties;
 
-    public static void log(Level level, String message, Throwable throwable) {
-        Logger.getLogger("ReliableChat-Client").log(level, message, throwable);
+public class ReliableChatClient extends Application {
+
+    private static final Properties properties = new Properties();
+
+    /**
+     * Main method for old IDEs
+     * @param args Command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
     }
 
-    public static void log(Level level, String message) {
-        Logger.getLogger("ReliableChat-Client").log(level, message);
+    /**
+     * Starts the JavaFX Application
+     * @param stage Stage to show
+     * @throws Exception
+     */
+    @Override
+    public void start(Stage stage) throws Exception {
+        Parent root = FXMLLoader.load(ClassLoader.getSystemResource("reliablechat.fxml"));
+        stage.setTitle("ReliableChat - Client");
+        stage.setScene(new Scene(root, 800, 600));
+        stage.show();
     }
 
-    public static void setLevel(Level level) {
-        Logger.getLogger("ReliableChat-Client").setLevel(level);
-    }
 }

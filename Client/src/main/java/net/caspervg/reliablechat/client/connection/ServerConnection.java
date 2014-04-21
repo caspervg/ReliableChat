@@ -23,10 +23,11 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package connection;
+package net.caspervg.reliablechat.client.connection;
 
-import connection.handler.MessageHandler;
-import log.ReliableLogger;
+import javafx.application.Platform;
+import net.caspervg.reliablechat.client.handler.MessageHandler;
+import net.caspervg.reliablechat.client.log.ReliableLogger;
 import net.caspervg.reliablechat.protocol.CallMessage;
 import net.caspervg.reliablechat.protocol.ChatMessage;
 import net.caspervg.reliablechat.protocol.InfoMessage;
@@ -60,21 +61,26 @@ public class ServerConnection implements Runnable {
             while (true) {
                 Message msg = (Message) in.readObject();
                 ReliableLogger.log(Level.INFO, "Received a message from the server");
-                switch (msg.getMessageType()) {
-                    case CHAT:
-                        ChatMessage chatMessage = (ChatMessage) msg;
-                        MessageHandler.handleChat(chatMessage);
-                        break;
-                    case CALL:
-                        CallMessage callMessage = (CallMessage) msg;
-                        MessageHandler.handleCall(callMessage);
-                        break;
-                    case INFO:
-                        InfoMessage infoMessage = (InfoMessage) msg;
-                        MessageHandler.handleInfo(infoMessage);
-                    default:
-                        // We do not have to do anything. The server shouldn't be sending LOGOUT or LOGIN messages!
-                }
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (msg.getMessageType()) {
+                            case CHAT:
+                                ChatMessage chatMessage = (ChatMessage) msg;
+                                MessageHandler.handleChat(chatMessage);
+                                break;
+                            case CALL:
+                                CallMessage callMessage = (CallMessage) msg;
+                                MessageHandler.handleCall(callMessage);
+                                break;
+                            case INFO:
+                                InfoMessage infoMessage = (InfoMessage) msg;
+                                MessageHandler.handleInfo(infoMessage);
+                            default:
+                                // We do not have to do anything. The server shouldn't be sending LOGOUT or LOGIN messages!
+                        }
+                    }
+                });
             }
         } catch (ClassNotFoundException e) {
             ReliableLogger.log(Level.SEVERE, "Could not find protocol classes", e);
