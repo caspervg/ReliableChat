@@ -32,8 +32,9 @@ public enum CallType {
     MESSAGE_SENT(102, "Message sent successfully"),
 
     // Status >= 200 < 300: Whisper Failure
-    NICKNAME_IN_USE(200, "This nickname is already in use"),
-    RECIPIENT_NOT_EXIST(201, "The specified recipient does not exist or is not online"),
+    ALREADY_ONLINE(200, "This nickname is already in use"),
+    NOT_ONLINE(201, "This nickname is not in use"),
+    RECIPIENT_NOT_EXIST(202, "The specified recipient does not exist or is not online"),
 
     // Status >= 300 < 400: Shout Success
     USER_LOGGED_IN(300, "A user has logged in"),

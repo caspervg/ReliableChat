@@ -23,17 +23,28 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.caspervg.reliablechat.server.handler;
+package net.caspervg.reliablechat.protocol;
 
-import net.caspervg.reliablechat.protocol.ChatMessage;
-import net.caspervg.reliablechat.server.ReliableChatServer;
-import net.caspervg.reliablechat.server.connection.ClientConnection;
+public class InfoMessage extends Message {
 
-public class ChatHandler {
+    private CallType callType;
+    private Object payload;
 
-    public static void handle(ChatMessage msg) {
-        String sendTo = msg.getTo();
-        ClientConnection clientConnection = ReliableChatServer.getActiveConnections().get(sendTo);
-        clientConnection.sendMessage(msg);
+    private InfoMessage() {
+        super(MessageType.INFO);
+    }
+
+    public InfoMessage(CallType callType, Object payload) {
+        this();
+        this.callType = callType;
+        this.payload = payload;
+    }
+
+    public CallType getCallType() {
+        return callType;
+    }
+
+    public Object getPayload() {
+        return payload;
     }
 }

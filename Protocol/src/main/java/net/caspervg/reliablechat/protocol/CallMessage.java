@@ -30,7 +30,7 @@ public class CallMessage extends Message {
     private CallType callType;
 
     private CallMessage() {
-        super(MessageType.ERROR);
+        super(MessageType.CALL);
     }
 
     public CallMessage(CallType callType) {

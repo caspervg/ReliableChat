@@ -25,12 +25,9 @@
 
 package net.caspervg.reliablechat.server.connection;
 
-import net.caspervg.reliablechat.protocol.ChatMessage;
-import net.caspervg.reliablechat.protocol.LoginMessage;
-import net.caspervg.reliablechat.protocol.LogoutMessage;
-import net.caspervg.reliablechat.protocol.Message;
+import net.caspervg.reliablechat.protocol.*;
 import net.caspervg.reliablechat.server.ReliableChatServer;
-import net.caspervg.reliablechat.server.handler.ChatHandler;
+import net.caspervg.reliablechat.server.handler.MessageHandler;
 import net.caspervg.reliablechat.server.log.ReliableLogger;
 
 import java.io.*;
@@ -65,18 +62,16 @@ public class ClientConnection implements Runnable {
                 switch (msg.getMessageType()) {
                     case LOGIN:
                         LoginMessage loginMessage = (LoginMessage) msg;
-                        ReliableChatServer.getActiveConnections().put(loginMessage.getUsername(), this);
+                        MessageHandler.handleLogin(loginMessage, this);
                         break;
                     case LOGOUT:
                         LogoutMessage logoutMessage = (LogoutMessage) msg;
-                        ReliableChatServer.getActiveConnections().remove(logoutMessage.getUsername());
-                        stopped = true;
+                        MessageHandler.handleLogout(logoutMessage, this);
                         break;
                     case CHAT:
                         ChatMessage chatMessage = (ChatMessage) msg;
-                        ChatHandler.handle(chatMessage);
+                        MessageHandler.handleChat(chatMessage);
                         break;
-
                 }
             }
         } catch (ClassNotFoundException e) {
@@ -94,6 +89,10 @@ public class ClientConnection implements Runnable {
         } catch (IOException e) {
             ReliableLogger.log(Level.WARNING, "Failed to send message to a client");
         }
+    }
+
+    public void setStopped(boolean stopped) {
+        this.stopped = stopped;
     }
 
     public ObjectInputStream getIn() {

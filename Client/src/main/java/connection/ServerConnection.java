@@ -25,9 +25,11 @@
 
 package connection;
 
-import connection.handler.ChatHandler;
+import connection.handler.MessageHandler;
 import log.ReliableLogger;
+import net.caspervg.reliablechat.protocol.CallMessage;
 import net.caspervg.reliablechat.protocol.ChatMessage;
+import net.caspervg.reliablechat.protocol.InfoMessage;
 import net.caspervg.reliablechat.protocol.Message;
 
 import java.io.IOException;
@@ -45,9 +47,7 @@ public class ServerConnection implements Runnable {
     public ServerConnection(Socket server) {
         this.server = server;
         try {
-            System.out.println("Constructing in");
             this.in = new ObjectInputStream(server.getInputStream());
-            System.out.println("Constructing out");
             this.out = new ObjectOutputStream(server.getOutputStream());
         } catch (IOException e) {
             ReliableLogger.log(Level.WARNING, "Could not retrieve the input or output streams for the server", e);
@@ -63,8 +63,15 @@ public class ServerConnection implements Runnable {
                 switch (msg.getMessageType()) {
                     case CHAT:
                         ChatMessage chatMessage = (ChatMessage) msg;
-                        ChatHandler.handle(chatMessage);
+                        MessageHandler.handleChat(chatMessage);
                         break;
+                    case CALL:
+                        CallMessage callMessage = (CallMessage) msg;
+                        MessageHandler.handleCall(callMessage);
+                        break;
+                    case INFO:
+                        InfoMessage infoMessage = (InfoMessage) msg;
+                        MessageHandler.handleInfo(infoMessage);
                     default:
                         // We do not have to do anything. The server shouldn't be sending LOGOUT or LOGIN messages!
                 }

@@ -31,6 +31,6 @@ public enum MessageType implements Serializable {
     LOGIN,
     LOGOUT,
     CHAT,
-    ERROR,
+    CALL,
     INFO
 }
