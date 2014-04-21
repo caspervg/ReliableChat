@@ -29,7 +29,7 @@ public class LogoutMessage extends Message {
 
     private String username;
 
-    public LogoutMessage() {
+    private LogoutMessage() {
         super(MessageType.LOGOUT);
     }
 

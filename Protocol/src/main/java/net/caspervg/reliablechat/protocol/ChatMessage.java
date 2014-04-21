@@ -29,7 +29,7 @@ public class ChatMessage extends Message {
 
     private String from, to, message;
 
-    public ChatMessage() {
+    private ChatMessage() {
         super(MessageType.CHAT);
     }
 

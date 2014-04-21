@@ -25,20 +25,36 @@
 
 package net.caspervg.reliablechat.protocol;
 
-public class LoginMessage extends Message {
+public enum CallType {
+    // Status >= 100 < 200: Whisper Success
+    YOU_LOGGED_IN(100, "Logged in successfully"),
+    YOU_LOGGED_OUT(101, "Logged out successfully"),
+    MESSAGE_SENT(102, "Message sent successfully"),
 
-    private String username;
+    // Status >= 200 < 300: Whisper Failure
+    NICKNAME_IN_USE(200, "This nickname is already in use"),
+    RECIPIENT_NOT_EXIST(201, "The specified recipient does not exist or is not online"),
 
-    private LoginMessage() {
-        super(MessageType.LOGIN);
+    // Status >= 300 < 400: Shout Success
+    USER_LOGGED_IN(300, "A user has logged in"),
+    USER_LOGGED_OUT(301, "A user has logged out"),
+
+    // Status >= 400 < 500: Shout Failure
+    SHUTTING_DOWN(400, "Server shutting down");
+
+    private int code;
+    private String message;
+
+    CallType(int code, String message) {
+        this.code = code;
+        this.message = message;
     }
 
-    public LoginMessage(String username) {
-        this();
-        this.username = username;
+    public int getCode() {
+        return code;
     }
 
-    public String getUsername() {
-        return username;
+    public String getMessage() {
+        return message;
     }
 }

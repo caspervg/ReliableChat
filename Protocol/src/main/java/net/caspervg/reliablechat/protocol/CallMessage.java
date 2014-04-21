@@ -25,20 +25,20 @@
 
 package net.caspervg.reliablechat.protocol;
 
-public class LoginMessage extends Message {
+public class CallMessage extends Message {
 
-    private String username;
+    private CallType callType;
 
-    private LoginMessage() {
-        super(MessageType.LOGIN);
+    private CallMessage() {
+        super(MessageType.ERROR);
     }
 
-    public LoginMessage(String username) {
+    public CallMessage(CallType callType) {
         this();
-        this.username = username;
+        this.callType = callType;
     }
 
-    public String getUsername() {
-        return username;
+    public CallType getCallType() {
+        return callType;
     }
 }

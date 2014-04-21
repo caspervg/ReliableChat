@@ -30,5 +30,7 @@ import java.io.Serializable;
 public enum MessageType implements Serializable {
     LOGIN,
     LOGOUT,
-    CHAT
+    CHAT,
+    ERROR,
+    INFO
 }
