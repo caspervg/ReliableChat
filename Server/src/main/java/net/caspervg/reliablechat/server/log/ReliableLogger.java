@@ -37,4 +37,8 @@ public class ReliableLogger {
     public static void log(Level level, String message) {
         Logger.getLogger("ReliableChat-Server").log(level, message);
     }
+
+    public static void setLevel(Level level) {
+        Logger.getLogger("ReliableChat-Server").setLevel(level);
+    }
 }

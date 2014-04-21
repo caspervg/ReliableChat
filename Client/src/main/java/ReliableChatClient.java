@@ -25,6 +25,7 @@
 
 
 import connection.ServerConnection;
+import log.ReliableLogger;
 import net.caspervg.reliablechat.protocol.ChatMessage;
 import net.caspervg.reliablechat.protocol.LoginMessage;
 import net.caspervg.reliablechat.protocol.LogoutMessage;
@@ -32,18 +33,31 @@ import net.caspervg.reliablechat.protocol.LogoutMessage;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
+import java.util.Properties;
 import java.util.Scanner;
+import java.util.logging.Level;
 
 public class ReliableChatClient {
 
+    private static final Properties properties = new Properties();
     /**
      * Temporary method to test the server
      * @param args
      */
     public static void main(String[] args) {
+
         try {
-            Socket socket = new Socket(InetAddress.getLocalHost(), 1000);
+            properties.load(ClassLoader.getSystemResourceAsStream("config.properties"));
+
+            ReliableLogger.setLevel(Level.parse(properties.getProperty("reliablechat.client.log_level")));
+        } catch (IOException e) {
+            ReliableLogger.log(Level.SEVERE, "Could not load the configuration file", e);
+            System.exit(1);
+        }
+
+        try {
+            int port = Integer.parseInt(properties.getProperty("reliablechat.client.port"));
+            Socket socket = new Socket(InetAddress.getLocalHost(), port);
 
             System.out.println("Enter your desired username:");
             Scanner reader = new Scanner(new InputStreamReader(System.in));

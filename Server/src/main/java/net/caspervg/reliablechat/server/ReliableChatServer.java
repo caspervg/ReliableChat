@@ -33,6 +33,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ReliableChatServer {
 
@@ -43,6 +44,8 @@ public class ReliableChatServer {
 
         try {
             properties.load(ClassLoader.getSystemResourceAsStream("config.properties"));
+
+            ReliableLogger.setLevel(Level.parse(properties.getProperty("reliablechat.server.log_level")));
         } catch (IOException e) {
             ReliableLogger.log(Level.SEVERE, "Could not load the configuration file", e);
             System.exit(1);
