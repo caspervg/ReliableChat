@@ -23,66 +23,56 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.caspervg.reliablechat.server.connection;
+package connection;
 
+import connection.handler.ChatHandler;
+import log.ReliableLogger;
 import net.caspervg.reliablechat.protocol.ChatMessage;
-import net.caspervg.reliablechat.protocol.LoginMessage;
-import net.caspervg.reliablechat.protocol.LogoutMessage;
 import net.caspervg.reliablechat.protocol.Message;
-import net.caspervg.reliablechat.server.ReliableChatServer;
-import net.caspervg.reliablechat.server.handler.ChatHandler;
-import net.caspervg.reliablechat.server.log.ReliableLogger;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 
-public class ClientConnection implements Runnable {
+public class ServerConnection implements Runnable {
 
-    private Socket client;
+    private Socket server;
     private ObjectInputStream in;
     private ObjectOutputStream out;
-    private boolean stopped = false;
 
-    public ClientConnection(Socket client) {
-        this.client = client;
-
+    public ServerConnection(Socket server) {
+        this.server = server;
         try {
-            this.out = new ObjectOutputStream(client.getOutputStream());
-            this.out.flush();
-            this.in = new ObjectInputStream(client.getInputStream());
+            System.out.println("Constructing in");
+            this.in = new ObjectInputStream(server.getInputStream());
+            System.out.println("Constructing out");
+            this.out = new ObjectOutputStream(server.getOutputStream());
         } catch (IOException e) {
-            ReliableLogger.log(Level.WARNING, "Could not retrieve input or output streams for a client", e);
+            ReliableLogger.log(Level.WARNING, "Could not retrieve the input or output streams for the server", e);
         }
     }
 
     @Override
     public void run() {
         try {
-            while (! stopped) {
+            while (true) {
                 Message msg = (Message) in.readObject();
-                ReliableLogger.log(Level.INFO, "Received a message from a client");
+                ReliableLogger.log(Level.INFO, "Received a message from the server");
                 switch (msg.getMessageType()) {
-                    case LOGIN:
-                        LoginMessage loginMessage = (LoginMessage) msg;
-                        ReliableChatServer.getActiveConnections().put(loginMessage.getUsername(), this);
-                        break;
-                    case LOGOUT:
-                        LogoutMessage logoutMessage = (LogoutMessage) msg;
-                        ReliableChatServer.getActiveConnections().remove(logoutMessage.getUsername());
-                        stopped = true;
-                        break;
                     case CHAT:
                         ChatMessage chatMessage = (ChatMessage) msg;
                         ChatHandler.handle(chatMessage);
                         break;
-
+                    default:
+                        // We do not have to do anything. The server shouldn't be sending LOGOUT or LOGIN messages!
                 }
             }
         } catch (ClassNotFoundException e) {
             ReliableLogger.log(Level.SEVERE, "Could not find protocol classes", e);
         } catch (IOException e) {
-            ReliableLogger.log(Level.WARNING, "Could not read message from client", e);
+            ReliableLogger.log(Level.WARNING, "Could not read message from server", e);
         }
     }
 
@@ -90,9 +80,9 @@ public class ClientConnection implements Runnable {
         try {
             out.writeObject(msg);
             out.flush();
-            ReliableLogger.log(Level.INFO, "Sent a message to a client");
+            ReliableLogger.log(Level.INFO, "Sent a chat message to the server");
         } catch (IOException e) {
-            ReliableLogger.log(Level.WARNING, "Failed to send message to a client");
+            ReliableLogger.log(Level.WARNING, "Failed to send message to the server");
         }
     }
 
