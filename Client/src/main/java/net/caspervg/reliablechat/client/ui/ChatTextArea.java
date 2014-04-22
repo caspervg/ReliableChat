@@ -23,55 +23,41 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.caspervg.reliablechat.client.handler;
+package net.caspervg.reliablechat.client.ui;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.scene.control.TextArea;
-import net.caspervg.reliablechat.client.ReliableChatCompanion;
 import net.caspervg.reliablechat.client.ReliableChatModel;
-import net.caspervg.reliablechat.protocol.CallMessage;
 import net.caspervg.reliablechat.protocol.ChatMessage;
-import net.caspervg.reliablechat.protocol.InfoMessage;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-public class MessageHandler {
+public class ChatTextArea extends TextArea implements InvalidationListener {
 
-    private static ReliableChatModel model = null;
+    private ReliableChatModel model;
 
-    public static void setModel(ReliableChatModel model) {
-        MessageHandler.model = model;
-    }
-
-    public static void handleChat(ChatMessage msg) {
+    @Override
+    public void invalidated(Observable observable) {
         List<ChatMessage> messages = model.getMessages();
+
         if (messages == null) {
-            messages = new ArrayList<>();
+            this.setText("");
+        } else {
+            String content = "";
+            for (ChatMessage msg : messages) {
+                content += (msg.getFrom() + ": " + msg.getMessage() + "\n");
+            }
+            this.setText(content);
         }
-
-        messages.add(msg);
-
-        model.setMessages(messages);
     }
 
-    public static void handleCall(CallMessage msg) {
-        // TODO: Actually use a GUI instead of the command line
-        System.err.println("CALL " + msg.getCallType().getCode() + ": " + msg.getCallType().getMessage());
+    public ReliableChatModel getModel() {
+        return model;
     }
 
-    @SuppressWarnings("unchecked")
-    public static void handleInfo(InfoMessage msg) {
-        System.err.println("INFO " + msg.getCallType().getCode() + ": " + msg.getCallType().getMessage());
-
-        switch (msg.getCallType()) {
-            case USER_LOGGED_IN:
-            case USER_LOGGED_OUT:
-                model.setOnlineUsers(new HashSet<String>((List<String>) msg.getPayload()));
-                break;
-            default:
-                // Do nothing
-        }
+    public void setModel(ReliableChatModel model) {
+        this.model = model;
+        model.addListener(this);
     }
 }

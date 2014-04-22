@@ -1,4 +1,4 @@
-package net.caspervg.reliablechat.client;/*
+/*
  * Copyright (c) 2014 Casper Van Gheluwe
  *
  *  Permission is hereby granted, free of charge, to any person
@@ -23,6 +23,36 @@ package net.caspervg.reliablechat.client;/*
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-public class ReliableChatCompanion {
-    // Just hanging out, being empty
+package net.caspervg.reliablechat.client.ui;
+
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.event.EventHandler;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+import net.caspervg.reliablechat.client.ReliableChatModel;
+
+
+public class ChatTextField extends TextField implements EventHandler<KeyEvent> {
+
+    private ReliableChatModel model;
+
+    public ChatTextField() {
+        super();
+        this.setOnKeyTyped(this);
+    }
+
+    @Override
+    public void handle(KeyEvent keyEvent) {
+        String msg = this.getText();
+        model.setCurrentMessage(msg);
+    }
+
+    public ReliableChatModel getModel() {
+        return model;
+    }
+
+    public void setModel(ReliableChatModel model) {
+        this.model = model;
+    }
 }

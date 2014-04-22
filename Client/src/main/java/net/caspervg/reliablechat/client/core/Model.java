@@ -1,4 +1,4 @@
-package net.caspervg.reliablechat.client;/*
+/*
  * Copyright (c) 2014 Casper Van Gheluwe
  *
  *  Permission is hereby granted, free of charge, to any person
@@ -23,6 +23,38 @@ package net.caspervg.reliablechat.client;/*
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-public class ReliableChatCompanion {
-    // Just hanging out, being empty
+package net.caspervg.reliablechat.client.core;
+
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class Model implements Observable {
+
+    private Set<InvalidationListener> listenerSet = new HashSet<>();
+    private boolean disabled = false;
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    protected void fireInvalidationEvent() {
+        if (!disabled) {
+            for (InvalidationListener listener : listenerSet) {
+                listener.invalidated(this);
+            }
+        }
+    }
+
+    @Override
+    public void addListener(InvalidationListener invalidationListener) {
+        listenerSet.add(invalidationListener);
+    }
+
+    @Override
+    public void removeListener(InvalidationListener invalidationListener) {
+        listenerSet.remove(invalidationListener);
+    }
 }

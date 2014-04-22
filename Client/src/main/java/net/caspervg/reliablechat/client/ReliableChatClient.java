@@ -29,8 +29,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import net.caspervg.reliablechat.client.log.ReliableLogger;
 
+import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
 
 public class ReliableChatClient extends Application {
 
@@ -51,6 +54,14 @@ public class ReliableChatClient extends Application {
      */
     @Override
     public void start(Stage stage) throws Exception {
+        try {
+            properties.load(ClassLoader.getSystemResourceAsStream("config.properties"));
+            ReliableLogger.setLevel(Level.parse(properties.getProperty("reliablechat.client.log_level")));
+        } catch (IOException e) {
+            ReliableLogger.log(Level.SEVERE, "Could not load the configuration file", e);
+            System.exit(1);
+        }
+
         Parent root = FXMLLoader.load(ClassLoader.getSystemResource("reliablechat.fxml"));
         stage.setTitle("ReliableChat - Client");
         stage.setScene(new Scene(root, 800, 600));
