@@ -33,6 +33,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import net.caspervg.reliablechat.client.ReliableChatModel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 
@@ -43,12 +45,10 @@ public class FriendsListView extends ListView<String> implements InvalidationLis
     public FriendsListView() {
         super();
 
-        this.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        this.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         this.getSelectionModel().selectedItemProperty().addListener((observableValue, s, s2) -> {
-            String selection = getSelectionModel().getSelectedItem();
-            if (selection != null) {
-                model.setCurrentRecipient(selection);
-            }
+            List<String> selection = new ArrayList<>(getSelectionModel().getSelectedItems());
+            model.setCurrentRecipient(selection);
         });
     }
 

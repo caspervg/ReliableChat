@@ -25,8 +25,6 @@
 
 package net.caspervg.reliablechat.client.ui;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;

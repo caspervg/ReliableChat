@@ -29,30 +29,32 @@ import net.caspervg.reliablechat.protocol.*;
 import net.caspervg.reliablechat.server.ReliableChatServer;
 import net.caspervg.reliablechat.server.connection.ClientConnection;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MessageHandler {
 
     public static void handleChat(ChatMessage msg) {
-        String sendTo = msg.getTo();
+        List<String> sendTo = msg.getTo();
         String sendFrom = msg.getFrom();
-        ClientConnection clientConnection = ReliableChatServer.getActiveConnections().get(sendTo);
+        for (String recipient : sendTo) {
+            ClientConnection clientConnection = ReliableChatServer.getActiveConnections().get(recipient);
 
-        if (clientConnection != null) {
-            clientConnection.sendMessage(msg);
+            if (clientConnection != null) {
+                clientConnection.sendMessage(msg);
 
-            clientConnection = ReliableChatServer.getActiveConnections().get(sendFrom);
-            clientConnection.sendMessage(new CallMessage(CallType.MESSAGE_SENT));
-            clientConnection = ReliableChatServer.getActiveConnections().get(sendFrom);
-            clientConnection.sendMessage(msg);
-        } else {
-            clientConnection = ReliableChatServer.getActiveConnections().get(sendFrom);
-            clientConnection.sendMessage(new CallMessage(CallType.RECIPIENT_NOT_EXIST));
+                clientConnection = ReliableChatServer.getActiveConnections().get(sendFrom);
+                clientConnection.sendMessage(new CallMessage(CallType.MESSAGE_SENT));
+            } else {
+                clientConnection = ReliableChatServer.getActiveConnections().get(sendFrom);
+                clientConnection.sendMessage(new CallMessage(CallType.RECIPIENT_NOT_EXIST));
+            }
         }
+
+        // Callback to the message sender
+        ClientConnection senderConnection = ReliableChatServer.getActiveConnections().get(sendFrom);
+        senderConnection.sendMessage(msg);
     }
 
     public static void handleLogin(LoginMessage msg, ClientConnection conn) {

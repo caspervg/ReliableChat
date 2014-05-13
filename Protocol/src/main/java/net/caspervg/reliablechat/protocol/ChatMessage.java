@@ -25,15 +25,18 @@
 
 package net.caspervg.reliablechat.protocol;
 
+import java.util.List;
+
 public class ChatMessage extends Message {
 
-    private String from, to, message;
+    private String from, message;
+    private List<String> to;
 
     private ChatMessage() {
         super(MessageType.CHAT);
     }
 
-    public ChatMessage(String from, String to, String message) {
+    public ChatMessage(String from, List<String> to, String message) {
         this();
         this.from = from;
         this.to = to;
@@ -44,7 +47,7 @@ public class ChatMessage extends Message {
         return from;
     }
 
-    public String getTo() {
+    public List<String> getTo() {
         return to;
     }
 

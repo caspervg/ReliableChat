@@ -1,4 +1,6 @@
-package net.caspervg.reliablechat.client;/*
+package net.caspervg.reliablechat.client;
+
+/*
  * Copyright (c) 2014 Casper Van Gheluwe
  *
  *  Permission is hereby granted, free of charge, to any person

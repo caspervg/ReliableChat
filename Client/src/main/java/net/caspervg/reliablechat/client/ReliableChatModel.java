@@ -39,7 +39,7 @@ public class ReliableChatModel extends Model {
     private String username;
     private Set<String> onlineUsers;
     private String currentMessage;
-    private String currentRecipient;
+    private List<String> currentRecipient;
     private List<ChatMessage> messages;
 
     public ReliableChatModel() {
@@ -91,11 +91,11 @@ public class ReliableChatModel extends Model {
         }
     }
 
-    public String getCurrentRecipient() {
+    public List<String> getCurrentRecipient() {
         return currentRecipient;
     }
 
-    public void setCurrentRecipient(String currentRecipient) {
+    public void setCurrentRecipient(List<String> currentRecipient) {
         if (this.currentRecipient == null || currentRecipient == null || !currentRecipient.equals(this.currentRecipient)) {
             this.currentRecipient = currentRecipient;
             fireInvalidationEvent();

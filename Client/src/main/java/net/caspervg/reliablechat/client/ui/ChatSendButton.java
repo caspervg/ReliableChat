@@ -34,6 +34,8 @@ import net.caspervg.reliablechat.client.ReliableChatModel;
 import net.caspervg.reliablechat.client.connection.ServerConnection;
 import net.caspervg.reliablechat.protocol.ChatMessage;
 
+import java.util.List;
+
 public class ChatSendButton extends Button implements InvalidationListener, EventHandler<ActionEvent> {
 
     private ReliableChatModel model;
@@ -47,7 +49,7 @@ public class ChatSendButton extends Button implements InvalidationListener, Even
     public void handle(ActionEvent actionEvent) {
         String message = model.getCurrentMessage();
         String username = model.getUsername();
-        String recipient = model.getCurrentRecipient();
+        List<String> recipient = model.getCurrentRecipient();
         ServerConnection connection = model.getConnection();
 
         connection.sendMessage(new ChatMessage(username, recipient, message));
@@ -57,8 +59,7 @@ public class ChatSendButton extends Button implements InvalidationListener, Even
     public void invalidated(Observable observable) {
         if (model.getConnection() == null ||
                 model.getCurrentRecipient() == null ||
-                model.getCurrentMessage() == null ||
-                model.getCurrentRecipient().equals(model.getUsername())) {
+                model.getCurrentMessage() == null) {
             this.setDisable(true);
         } else {
             this.setDisable(false);
