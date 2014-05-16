@@ -29,8 +29,10 @@ import javafx.scene.control.TextArea;
 import net.caspervg.reliablechat.client.ReliableChatCompanion;
 import net.caspervg.reliablechat.client.ReliableChatModel;
 import net.caspervg.reliablechat.protocol.CallMessage;
+import net.caspervg.reliablechat.protocol.CallType;
 import net.caspervg.reliablechat.protocol.ChatMessage;
 import net.caspervg.reliablechat.protocol.InfoMessage;
+import org.controlsfx.dialog.Dialogs;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -57,8 +59,21 @@ public class MessageHandler {
     }
 
     public static void handleCall(CallMessage msg) {
-        // TODO: Actually use a GUI instead of the command line
         System.err.println("CALL " + msg.getCallType().getCode() + ": " + msg.getCallType().getMessage());
+
+        switch (msg.getCallType()) {
+            case ALREADY_ONLINE:
+            case NOT_ONLINE:
+                model.setUsername(null);
+                model.setConnection(null);
+            case RECIPIENT_NOT_EXIST:
+                CallType type = msg.getCallType();
+                Dialogs.create()
+                        .title("Something went wrong..")
+                        .message(String.format("Error %d: %s", type.getCode(), type.getMessage()))
+                        .nativeTitleBar()
+                        .showError();
+        }
     }
 
     @SuppressWarnings("unchecked")
