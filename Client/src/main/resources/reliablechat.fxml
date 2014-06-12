@@ -31,24 +31,21 @@
   ~  OTHER DEALINGS IN THE SOFTWARE.
   -->
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.caspervg.reliablechat.client.ReliableChatCompanion">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+            prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="net.caspervg.reliablechat.client.ReliableChatCompanion">
     <fx:define>
-        <ReliableChatModel fx:id="model" />
+        <ReliableChatModel fx:id="model"/>
     </fx:define>
-    <children>
-        <MenuBar prefHeight="51.0" prefWidth="800.0">
-            <menus>
-                <Menu mnemonicParsing="false" text="Connect">
-                    <items>
-                        <LoginMenuItem model="$model" fx:id="loginButton" mnemonicParsing="false" text="Log in" />
-                        <LogoutMenuItem model="$model" fx:id="logoutButton" disable="true" mnemonicParsing="false" text="Log out" />
-                    </items>
-                </Menu>
-            </menus>
-        </MenuBar>
-        <ChatTextArea model="$model" fx:id="chatArea" editable="false" layoutX="10.0" layoutY="61.0" prefHeight="440.0" prefWidth="590.0" />
-        <ChatTextField model="$model" fx:id="chatField" layoutX="10.0" layoutY="510.0" prefHeight="76.0" prefWidth="590.0" />
-        <ChatSendButton model="$model" fx:id="sendButton" layoutX="613.0" layoutY="510.0" mnemonicParsing="false" prefHeight="76.0" prefWidth="180.0" text="Send" />
-        <FriendsListView model="$model" layoutX="613.0" layoutY="61.0" prefHeight="440.0" prefWidth="180.0" />
-    </children>
+    <MenuBar prefHeight="51.0" prefWidth="800.0">
+        <Menu mnemonicParsing="false" text="Connect">
+            <LoginMenuItem model="$model" mnemonicParsing="false" text="Log in"/>
+            <LogoutMenuItem model="$model" disable="true" mnemonicParsing="false" text="Log out"/>
+        </Menu>
+    </MenuBar>
+    <ChatTextArea model="$model" editable="false" layoutX="10.0" layoutY="61.0" prefHeight="440.0" prefWidth="590.0"/>
+    <ChatTextField model="$model" layoutX="10.0" layoutY="510.0" prefHeight="76.0" prefWidth="590.0"/>
+    <ChatSendButton model="$model" layoutX="613.0" layoutY="510.0" mnemonicParsing="false" prefHeight="76.0"
+                    prefWidth="180.0" text="Send"/>
+    <FriendsListView model="$model" layoutX="613.0" layoutY="61.0" prefHeight="440.0" prefWidth="180.0"/>
 </AnchorPane>
