@@ -25,8 +25,6 @@
 
 package net.caspervg.reliablechat.client.handler;
 
-import javafx.scene.control.TextArea;
-import net.caspervg.reliablechat.client.ReliableChatCompanion;
 import net.caspervg.reliablechat.client.ReliableChatModel;
 import net.caspervg.reliablechat.protocol.CallMessage;
 import net.caspervg.reliablechat.protocol.CallType;
@@ -37,7 +35,6 @@ import org.controlsfx.dialog.Dialogs;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class MessageHandler {
 
@@ -59,8 +56,6 @@ public class MessageHandler {
     }
 
     public static void handleCall(CallMessage msg) {
-        System.err.println("CALL " + msg.getCallType().getCode() + ": " + msg.getCallType().getMessage());
-
         switch (msg.getCallType()) {
             case ALREADY_ONLINE:
             case NOT_ONLINE:
@@ -78,12 +73,10 @@ public class MessageHandler {
 
     @SuppressWarnings("unchecked")
     public static void handleInfo(InfoMessage msg) {
-        System.err.println("INFO " + msg.getCallType().getCode() + ": " + msg.getCallType().getMessage());
-
         switch (msg.getCallType()) {
             case USER_LOGGED_IN:
             case USER_LOGGED_OUT:
-                model.setOnlineUsers(new HashSet<String>((List<String>) msg.getPayload()));
+                model.setOnlineUsers(new HashSet<>((List<String>) msg.getPayload()));
                 break;
             default:
                 // Do nothing
